@@ -1,0 +1,23 @@
+  <configuration>
+      <property>
+          <name>fs.defaultFS</name>
+          <value>hdfs://HOSTNAME:8020</value>
+      </property>
+      <property>
+      <name>dfs.name.dir</name>
+      <value>/data/hdfs/hdfs</value>
+   </property>
+   <property>
+     <name>dfs.data.dir</name>
+     <value>/data/hdfs/hdfsdata</value>
+   </property>
+   <property>
+     <name>hadoop.tmp.dir</name>
+     <value>/data/hdfs/hdfstmp</value>
+   <description>A base for other temporary directories.</description>
+   </property>
+   <property>
+   <name>dfs.replication</name>
+   <value>3</value>
+   </property>
+  </configuration>
