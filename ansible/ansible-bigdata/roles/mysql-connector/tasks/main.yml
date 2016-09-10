@@ -1,0 +1,18 @@
+---
+# file: roles/mysql-connector/tasks/main.yml
+
+- name: get mysql-connector
+  get_url: url=http://download.softagency.net/MySQL/Downloads/Connector-J/mysql-connector-java-5.1.39.tar.gz dest=/usr/local/src/
+  tags: mysql-connector
+
+- name: decompression tar.gz file
+  command: tar -zxvf /usr/local/src/mysql-connector-java-5.1.39.tar.gz -C /usr/local/src/
+  tags: mysql-connector
+
+- name: mkdir /usr/share/java
+  command: mkdir -p /usr/share/java
+  tags: mysql-connector
+
+- name: copy mysql-connector
+  command: cp /usr/local/src/mysql-connector-java-5.1.39/mysql-connector-java-5.1.39-bin.jar /usr/share/java/mysql-connector-java.jar
+  tags: mysql-connector

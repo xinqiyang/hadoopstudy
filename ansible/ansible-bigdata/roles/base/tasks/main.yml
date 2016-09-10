@@ -1,0 +1,125 @@
+---
+# file: roles/base/tasks/main.yml
+
+- name: mkdir /root/.ssh
+  file: path=/root/.ssh state=directory
+  ignore_errors: True
+  tags: base
+
+- name: configure nopass ssh for clusters authorized_keys
+  template: src=authorized_keys dest=/root/.ssh/authorized_keys mode=0600
+  ignore_errors: True
+  tags: base
+
+- name: configure nopass ssh for clusters id_rsa
+  template: src=id_rsa dest=/root/.ssh/id_rsa mode=0600
+  ignore_errors: True
+  tags: base
+
+- name: configure sshd_config don't use dns when ssh login
+  template: src=sshd_config dest=/etc/ssh/sshd_config
+  ignore_errors: True
+  tags: base
+
+- name: configure ssh_config don't ask when ssh login
+  template: src=ssh_config dest=/etc/ssh/ssh_config
+  ignore_errors: True
+  tags: base
+
+- name: configure i18n
+  template: src=i18n dest=/etc/sysconfig/i18n
+  ignore_errors: True
+  tags: base
+
+- name: configure local link disable
+  lineinfile: dest=/etc/sysconfig/network line="NOZEROCONF=yes"
+  ignore_errors: True
+  tags: base
+
+- name: configure ipv6 disable
+  lineinfile: dest=/etc/sysconfig/network line="NETWORKING_IPV6=no"
+  ignore_errors: True
+  tags: base
+
+- name: configure limits of noproc and nofile
+  template: src=limits.conf dest=/etc/security/limits.conf
+  ignore_errors: True
+  tags: base
+
+- name: configure dns server
+  template: src=resolv.conf dest=/etc/resolv.conf
+  ignore_errors: True
+  tags: base
+
+- name: configure hosts file
+  template: src=hosts dest=/etc/hosts
+  ignore_errors: True
+  tags: base
+
+- name: selinux file
+  template: src=config dest=/etc/selinux/config
+  ignore_errors: True
+  tags: base
+
+- name: configure hardclock
+  command: /sbin/hwclock --systohc
+  ignore_errors: True
+  tags: base
+
+- name: chage IO scheduler from cfq to deadline for improving read latency
+  shell: echo deadline > /sys/block/sda/queue/scheduler
+  ignore_errors: True
+  tags: base
+
+- name: disable Transparent Huge Pages
+  shell: echo never > /sys/kernel/mm/redhat_transparent_hugepage/enabled && echo never > /sys/kernel/mm/redhat_transparent_hugepage/defrag
+  ignore_errors: True
+  tags: base
+
+- name: install epel packages
+  command: rpm -ivh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+  ignore_errors: True  
+  tags: base
+
+- name: yum install packages
+  yum: name={{ item }} state=latest
+  with_items:
+    - dstat
+    - rsync
+    - ntp
+  ignore_errors: True 
+  tags: base
+
+- name: configure ntp config file
+  template: src=ntp.conf dest=/etc/ntp.conf
+  ignore_errors: True
+  tags: base
+
+- name: configure ntpdate
+  command: ntpdate 0.centos.pool.ntp.org
+  tags: base
+  ignore_errors: True
+
+- name: configure timezone
+  command: rsync -a /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
+  tags: base
+  ignore_errors: True
+
+- name: start some service
+  service: name={{ item }} state=started enabled=yes
+  with_items:
+    - ntpd
+  ignore_errors: True
+  tags: base
+
+- name: stop some service
+  service: name={{ item }} state=stopped enabled=no
+  with_items:
+    - iptables
+    - ip6tables
+  ignore_errors: True
+  tags: base
+
+- name: yum update all
+  shell: /usr/bin/yum -y update && /usr/bin/yum -y clean all
+  tags: base

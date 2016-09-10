@@ -1,0 +1,39 @@
+---
+# file: roles/mysql/tasks/main.yml
+
+- name: yum remove mysql-libs
+  command: yum -y remove mysql-libs-5.1.73-7.el6.x86_64
+  ignore_errors: True
+  tags: mysql
+
+- name: install mysql-client rpm
+  command: rpm -ivh /usr/local/src/MySQL-client-5.5.50-1.el6.x86_64.rpm 
+  ignore_errors: True
+  tags: mysql
+
+- name: install mysql-devel rpm
+  command: rpm -ivh /usr/local/src/MySQL-devel-5.5.50-1.el6.x86_64.rpm 
+  ignore_errors: True
+  tags: mysql
+
+- name: install mysql-server rpm
+  command: rpm -ivh /usr/local/src/MySQL-server-5.5.50-1.el6.x86_64.rpm 
+  ignore_errors: True
+  tags: mysql
+
+- name: install mysql-shared rpm
+  command: rpm -ivh /usr/local/src/MySQL-shared-5.5.50-1.el6.x86_64.rpm 
+  ignore_errors: True
+  tags: mysql
+
+- name: configure my.cnf file
+  template: src=my.cnf dest=/etc/my.cnf
+  tags: mysql
+
+- name: start mysql service
+  service: name=mysql state=started enabled=yes
+  tags: mysql
+
+- name: setup mysql root password
+  command: /usr/bin/mysqladmin -u root password 'root'
+  tags: mysql

@@ -1,0 +1,1 @@
+[2016-06-26 12:58:26,816] INFO     0[main] - com.cloudera.enterprise.dbutil.DbCommandExecutor.testDbConnection(DbCommandExecutor.java:237) - Successfully connected to database.

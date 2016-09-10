@@ -1,0 +1,13 @@
+---
+# file: roles/jdk/tasks/main.yml
+
+- name: deploy jdk rpm
+  copy: src=/usr/local/src/jdk-7u79-linux-x64.rpm dest=/usr/local/src/jdk-7u79-linux-x64.rpm
+  ignore_errors: True
+  tags: jdk
+
+- name: install jdk 1.7.79
+  command: rpm -ivh /usr/local/src/jdk-7u79-linux-x64.rpm
+  ignore_errors: True  
+  tags: jdk
+

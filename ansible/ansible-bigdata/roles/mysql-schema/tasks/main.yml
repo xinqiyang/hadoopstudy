@@ -1,0 +1,7 @@
+---
+# file: roles/mysql-schema/tasks/main.yml
+
+- name: execute mysql schema  
+  script: /root/ansible/ansible-bigdata/roles/mysql-schema/script/mysql-schema.sh   
+  ignore_errors: True
+  tags: mysql-schema

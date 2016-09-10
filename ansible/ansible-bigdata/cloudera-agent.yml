@@ -1,0 +1,7 @@
+---
+
+- hosts: agent
+  remote_user: root
+  roles:
+     - cloudera-agent
+

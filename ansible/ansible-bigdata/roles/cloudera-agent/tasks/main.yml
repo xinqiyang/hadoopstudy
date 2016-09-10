@@ -1,0 +1,20 @@
+---
+- name: get cm repository
+  template: src=cloudera-manager.repo dest=/etc/yum.repos.d/cloudera-manager.repo
+  ignore_errors: False
+  tags: cloudera-agent
+
+- name: yum install cm packages
+  yum: name={{ item }} state=latest
+  with_items:
+    - cloudera-manager-daemons
+    - cloudera-manager-agent
+  ignore_errors: False
+  tags: cloudera-agent
+
+- name: start some service
+  service: name={{ item }} state=started enabled=yes
+  with_items:
+    - cloudera-scm-agent
+  ignore_errors: False
+  tags: cloudera-agent

@@ -1,0 +1,25 @@
+---
+- name: get cm repository
+  template: src=cloudera-manager.repo dest=/etc/yum.repos.d/cloudera-manager.repo
+  ignore_errors: False
+  tags: cloudera-server
+
+- name: yum install cm packages
+  yum: name={{ item }} state=latest
+  with_items:
+    - cloudera-manager-daemons
+    - cloudera-manager-server
+  ignore_errors: False
+  tags: cloudera-server
+
+- name: setup clouderamanager table to mysql
+  command: /usr/share/cmf/schema/scm_prepare_database.sh mysql -h localhost -u root -proot --scm-host localhost scm scm ccah
+  ignore_errors: False  
+  tags: cloudera-server
+
+- name: start some service
+  service: name={{ item }} state=started enabled=yes
+  with_items:
+    - cloudera-scm-server
+  ignore_errors: False
+  tags: cloudera-server
